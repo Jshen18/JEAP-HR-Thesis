@@ -1,9 +1,10 @@
 const faker = require('faker');
+require('dotenv').config();
 
 const express = require('express');
 
 const app = express();
-const port = 3000; //.env file 
+const port = process.env.PORT; //.env file 
 
 app.listen(port, () => console.log(`listening on ${port}`))
 
