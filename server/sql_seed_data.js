@@ -31,6 +31,7 @@ import express from 'express';
     return faker.random.number({min:1, max: 12})
   }
 
+
   //mock experience data post request from vendor
   const experienceInventoryData = {
     experience_id: faker.random.number({min: 100000, max: 1000000}),
@@ -45,6 +46,7 @@ import express from 'express';
     price_USD: faker.finance.amount(10, 150, 2),
     host_id: faker.random.number({min: 100000, max: 1000000}),
     }
+
 
   //mock experience inventory data 
   const experienceInventoryData = {
@@ -62,6 +64,7 @@ import express from 'express';
     user_id: [faker.random.number({min: 100000, max: 1000000})],     
     }
 
+
   //mock reservations handler data coming in
   const reservationsIncoming = { 
       experience_id: faker.random.number({min: 100000, max: 1000000}),
@@ -69,6 +72,7 @@ import express from 'express';
       maxGuestCount: faker.random.number({min: 1, max: 15})
     }
   
+    
   //mock client facing service requesting data, data sent from experiences
   const clientRequestingForUser = {
       dateRange: dateRange(),

@@ -1,4 +1,4 @@
-const express = requre('express');
+import express from 'express';
 require('dotenv').config();
 
 const app = express();
