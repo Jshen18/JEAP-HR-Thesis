@@ -11,12 +11,12 @@ CREATE TABLE `Experiences` (
   `Price_USD` INTEGER NULL DEFAULT NULL,
   `neighborhood_id` INTEGER NULL DEFAULT NULL,
   `host_id` INTEGER NULL DEFAULT NULL,
-  `City_id` INT NULL DEFAULT NULL,
+  `City_id` INTEGER NULL DEFAULT NULL,
   `type_experience` bit NULL DEFAULT 1,
-  `type_immersion` bit NULL DEFAULT 1,
   `picture` MEDIUMTEXT NULL DEFAULT NULL,
   `user_id` INT(20) NULL DEFAULT NULL,
-  `address` INTEGER NULL DEFAULT NULL,
+  `address` VARCHAR(50) NULL DEFAULT NULL,
+  `date_range` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `Neighborhood`;
 CREATE TABLE `Neighborhood` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `Neighborhood` VARCHAR(25) NULL DEFAULT NULL,
-  `City_id` INT NULL DEFAULT NULL,
+  `City_id` INTEGER NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS `Reservations`;
 CREATE TABLE `Reservations` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `sold_out` bit NULL DEFAULT 1,
-  `date` DATE NULL DEFAULT NULL,
+  `date_range` VARCHAR(50) NULL DEFAULT NULL,
   `experience_id` INTEGER NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
@@ -68,6 +68,7 @@ CREATE TABLE `Reservations` (
 
 ALTER TABLE `Experiences` ADD FOREIGN KEY (neighborhood_id) REFERENCES `Neighborhood` (`id`);
 ALTER TABLE `Experiences` ADD FOREIGN KEY (City_id) REFERENCES `City` (`id`);
+ALTER TABLE `Neighborhood` ADD FOREIGN KEY (City_id) REFERENCES `City` (`id`);
 ALTER TABLE `Reservations` ADD FOREIGN KEY (experience_id) REFERENCES `Experiences` (`id`);
 
 -- ---
@@ -83,7 +84,7 @@ ALTER TABLE `Reservations` ADD FOREIGN KEY (experience_id) REFERENCES `Experienc
 -- Test Data
 -- ---
 
--- INSERT INTO `Experiences` (`id`,`Experience_title`,`Guest_max`,`Price_USD`,`neighborhood_id`,`host_id`,`City_id`,`type_experience`,`type_immersion`,`picture`,`user_id`,`address`) VALUES
+-- INSERT INTO `Experiences` (`id`,`Experience_title`,`Guest_max`,`Price_USD`,`neighborhood_id`,`host_id`,`City_id`,`type_experience`,`picture`,`user_id`,`address`,`date_range`) VALUES
 -- ('','','','','','','','','','','','');
 -- INSERT INTO `Neighborhood` (`id`,`Neighborhood`,`city_id`) VALUES
 -- ('','','');
