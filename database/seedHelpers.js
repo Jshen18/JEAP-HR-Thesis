@@ -5,40 +5,36 @@ import mysql from './index';
 
 // function to create randomNeighborhood
 const randomNeighborhood = function () {
-  const neighborhoods = ['Palm Park', 'Downtown', 'Uptown', 'Westside', 'Northside', 'Eastside', 'Southside', 'Glen Oak', 'Jefferson Park', 'Hollywood', 'Hills', 'Logan Square']
+  const neighborhoods = ['Palm Park', 'Downtown', 'Uptown', 'Westside', 'Northside', 'Eastside', 'Southside', 'Glen Oak', 'Jefferson Park', 'Hollywood', 'Hills', 'Logan Square'];
   const random = neighborhoods[Math.floor(Math.random() * neighborhoods.length)];
   return random;
-}
+};
 // function to create randomCity, add list from Ephraim
 const randomCity = function () {
-  const cities = ['New York City', 'Chicago', 'San Francisco', 'Los Angeles', 'Washington', 'Seattle', 'Boston', 'Austin', 'Philadelphia', 'Houston', 'San Diego', 'Denver', 'San Jose', 'Portland', 'Miami', 'Baltimore', 'Nashville', 'Dallas', 'Atlanta', 'Detroit', 'New Orleans', 'Minneapolis', 'Las Vegas', 'Honolulu', 'Phoenix', 'San Antonio', 'Milwaukee']
+  const cities = ['New York City', 'Chicago', 'San Francisco', 'Los Angeles', 'Washington', 'Seattle', 'Boston', 'Austin', 'Philadelphia', 'Houston', 'San Diego', 'Denver', 'San Jose', 'Portland', 'Miami', 'Baltimore', 'Nashville', 'Dallas', 'Atlanta', 'Detroit', 'New Orleans', 'Minneapolis', 'Las Vegas', 'Honolulu', 'Phoenix', 'San Antonio', 'Milwaukee'];
   const random = cities[Math.floor(Math.random() * cities.length)];
   return random;
-}
+};
+
 // function to create date daysRange
 const dateRange = function () {
   const month = dateMonth();
   const range = {};
   const days = [];
-  const startDay = faker.random.number({ min: 4, max: 10 })
-  const endDay = faker.random.number({ min: 11, max: 15 })
+  const startDay = faker.random.number({ min: 4, max: 10 });
+  const endDay = faker.random.number({ min: 11, max: 15 });
   for (let i = startDay; i < endDay; i++) {
     days.push(i);
   }
   range[month] = days;
   return range;
-}
+};
 
 // helper function for random month
 const dateMonth = function () {
-  return faker.random.number({ min: 1, max: 12 })
-}
+  return faker.random.number({ min: 1, max: 12 });
+};
 
-// mock experience data post request from vendor
-
-const randomExperience = (cityId, neighborhoodId) => {
-  return Object.values(experienceInventoryDataGenerator(cityId, neighborhoodId));
-}
 
 const experienceInventoryDataNew = {
   experience_id: faker.random.number({ min: 100000, max: 1000000 }),
@@ -68,6 +64,11 @@ const experienceInventoryDataGenerator = (cityId, neighborhoodId) => ({
   date_range: JSON.stringify(dateRange()),
 });
 
+// mock experience data post request from vendor
+
+const randomExperience = (cityId, neighborhoodId) => {
+  return Object.values(experienceInventoryDataGenerator(cityId, neighborhoodId));
+};
 
 // mock reservations handler data coming in
 const reservationsIncoming = {
@@ -79,6 +80,7 @@ const reservationsIncoming = {
 
 // mock client facing service requesting data, data sent from experiences
 const clientRequestingForUser = {
+  type: 'experience',
   dateRange: dateRange(),
   type_experience: Math.random() >= 0.5, // denotes experience or immersion boolean
   city: randomCity(),
