@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 app.get('/experiences', (req, res) => {
   db.queryAsync('SELECT * FROM EXPERIENCES WHERE id > 599900')
     .then((data) => {
-      res.json(data);
+      res.status(200).json(data);
     })
     .catch((error) => {
       res.sendStatus(400, error);
@@ -43,14 +43,12 @@ app.post('/reservations', (req, res) => {
 //  why is req body not have to filled out in postman??
 app.post('/addExperience', (req, res) => {
   const data = Object.assign({}, req.body, { 'date_range' : JSON.stringify(req.body.date_range) });
-  console.log('++++++++++++++++++req.body', req.body);
   db.queryAsync('INSERT INTO experiences SET ?', data)
     .then((data) => {
       console.log('sql data inserted using post request');
       res.json(data);
     })
     .catch((error) => {
-      console.log('bad request---------------', error);
       res.sendStatus(400, error);
     });
 });
