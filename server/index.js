@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import sqs from './awsFilesOnHold/sqsSetup';
 import db from '../database/index';
+
 
 require('dotenv').config();
 //  import seed data file to post and patch
@@ -23,9 +25,8 @@ app.get('/', (req, res) => {
 app.get('/experiences', (req, res) => {
   const { city } = req.query;
   const { neighborhood } = req.query;
-  
   const neighborhoodQuery = db.queryAsync(`SELECT id FROM NEIGHBORHOOD WHERE Neighborhood='${neighborhood}' LIMIT 1`);
-  const cityQuery = db.queryAsync(`SELECT id FROM CITY WHERE City='${city}' LIMIT 1`)
+  const cityQuery = db.queryAsync(`SELECT id FROM CITY WHERE City='${city}' LIMIT 1`);
 
   Promise.all([cityQuery, neighborhoodQuery])
     .then((data) => {
@@ -34,6 +35,7 @@ app.get('/experiences', (req, res) => {
         `SELECT * FROM EXPERIENCES WHERE City_id=${cityData.id} AND Neighborhood_id=${neighborhoodData.id}`;
       db.queryAsync(query)
         .then((data) => {
+          sqs.sendClient(data);
           res.status(200).json(data);
         })
         .catch((error) => {

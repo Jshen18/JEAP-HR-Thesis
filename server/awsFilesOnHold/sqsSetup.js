@@ -2,47 +2,81 @@ import { config } from 'dotenv';
 import { Promise } from 'bluebird';
 // Load the AWS SDK for Node.js
 import AWS from 'aws-sdk';
+import Consumer from 'sqs-consumer';
 
 config();
-// Set the region and configure AWS
 
+// Set the region and configure AWS
 AWS.config.update({
+  region: 'us-west-1',
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-west-1',
 });
 
-// Create an SQS service object, {apiVersion: '2012-11-05'}
-const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
-//  Create SNS service object
+// const app = Consumer.create({
+//   queueUrl: process.env.SQS_MYQUEUE_URL, //  some queue url, idk what yet
+// handleMessage: (message, done) => {
+//     // do some work with `message` that's coming in from reservations
+//     done();
+//   },
+//   sqs: new AWS.SQS({ apiVersion: '2012-11-05' }),
+// });
 
-const params = {
+
+// Create an SQS service object
+const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+
+//  Send reservations params
+const reservationParams = {
   DelaySeconds: 10,
   MessageAttributes: {
     Title: {
       DataType: 'String',
-      StringValue: 'The Whistler',
-    },
-    Author: {
-      DataType: 'String',
-      StringValue: 'John Grisham',
-    },
-    WeeksOn: {
-      DataType: 'Number',
-      StringValue: '6',
+      StringValue: 'Yay reservation params',
     },
   },
-  MessageBody: 'Information about current NY Times fiction bestseller for week of 12/11/2016.',
-  QueueUrl: process.env.SQS_MYQUEUE_URL,
+  MessageBody: 'test message, reservations SQS',
+  QueueUrl: process.env.SQS_RESERVATIONSQUEUE_URL,
 };
 
-sqs.sendMessage(params, (err, data) => {
-  if (err) {
-    console.log('Error', err);
-  } else {
-    console.log('Success', data.MessageId);
-  }
-});
+sqs.sendReservations = (message) => {
+  const reservationMessage = Object.assign({}, reservationParams);
+  reservationMessage.MessageBody = message;
+  sqs.sendMessage(reservationMessage, (err, data) => {
+    if (err) {
+      console.log('Error', err);
+    } else {
+      console.log('Success', data.MessageId);
+    }
+  });
+};
+
+
+const clientFacingParams = {
+  DelaySeconds: 10,
+  MessageAttributes: {
+    Title: {
+      DataType: 'String',
+      StringValue: 'Yay client params',
+    },
+  },
+  MessageBody: 'test message, client SQS',
+  QueueUrl: process.env.SQS_CLIENTQUEUE_URL,
+};
+
+sqs.sendClient = (message) => {
+  const clientMessage = Object.assign({}, clientFacingParams);
+  clientMessage.MessageBody = message;
+  sqs.sendMessage(clientMessage, (err, data) => {
+    if (err) {
+      console.log('Error', err);
+    } else {
+      console.log('Success', data.MessageId);
+    }
+  });
+}
+
+export default sqs;
 
 // const sns = new AWS.SNS();
 
