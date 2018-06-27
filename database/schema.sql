@@ -20,6 +20,7 @@ CREATE TABLE `Experiences` (
   PRIMARY KEY (`id`)
 );
 
+
 -- ---
 -- Table 'Neighborhood'
 -- 

@@ -1,47 +1,37 @@
 import db from './index';
 import {
-  randomCity, randomNeighborhood, experienceInventoryDataNew, randomExperience,
+  randomNeighborhood, experienceInventoryDataNew, randomExperience,
   reservationsIncoming, clientRequestingForUser
 } from './seedHelpers';
 
+// const query = 'INSERT INTO CITY (City) VALUES ?';
+// const cityData = [['New York City'], ['Chicago'], ['San Francisco'], ['Los Angeles'], ['Washington'], ['Seattle'], ['Boston'], ['Austin'], ['Philadelphia'], ['Houston'], ['San Diego'], ['Denver'], ['San Jose'], ['Portland'], ['Miami'], ['Baltimore'], ['Nashville'], ['Dallas'], ['Atlanta'], ['Detroit'], ['New Orleans'], ['Minneapolis'], ['Las Vegas'], ['Honolulu'], ['Phoenix'], ['San Antonio'], ['Milwaukee']];
+// db.query(query, [cityData], (error, cityResult) => {
+//   if (error) {
+//     throw error;
+//   } else {
+//     console.log('Successfully seeded cities', cityResult);
+//   }
+// });
 
-const x = 1000;
-const y = 200;
 
-for (let i = 0; i < x; i++) {
-  const query = 'INSERT INTO CITY (City) VALUES ?';
-  const cityData = [];
-  for (let i = 0; i < y; i++) {
-    cityData.push([randomCity()]);
-  }
-  db.query(query, [cityData], (error, cityResult) => {
-    if (error) {
-      throw error;
-    } else {
-      const query2 = 'INSERT INTO NEIGHBORHOOD (Neighborhood, city_id) VALUES ?';
-      const neighborhoodData = [];
-      for (let j = 0; j < y; j++) {
-        neighborhoodData.push([randomNeighborhood(), cityResult.insertId]);
+for (let j = 0; j < 20; j++) {
+  for (let i = 0; i < 500; i++) {
+    const randomCityQuery = 'SELECT id FROM city ORDER BY RAND() LIMIT 1';
+    db.query(randomCityQuery, (error, result) => {
+      const experiencesData = [];
+      for (let k = 0; k < 1000; k++) {
+        experiencesData.push(randomExperience(result[0].id, null));
       }
-      db.query(query2, [neighborhoodData], (error2, neighborhoodResult) => {
-        if (error2) {
-          throw error2;
-        } else {
-          const experiencesQuery = `INSERT INTO EXPERIENCES (Experience_title, Guest_max, Price_USD,
+      const experiencesQuery = `INSERT INTO EXPERIENCES (Experience_title, Guest_max, Price_USD,
           neighborhood_id, host_id, City_id, type_experience, picture, user_id, address,
           date_range) VALUES ?`;
-          const experiencesData = [];
-          for (let k = 0; k < y; k++) {
-            experiencesData.push(randomExperience(cityResult.insertId, neighborhoodResult.insertId));
-          }
-          db.query(experiencesQuery, [experiencesData], (error3, experiencesResult) => {
-            if (error3) {
-              throw error3;
-            }
-            console.log('+++YAY EXP SUCCESS SEEDED DB', experiencesResult.insertId);
-          });
+      db.query(experiencesQuery, [experiencesData], (error, experiencesResult) => {
+        if (error) {
+          throw error;
         }
+        console.log('+++YAY EXP SUCCESS SEEDED DB', experiencesResult.insertId);
       });
-    }
-  });
+    });
+  }  
 }

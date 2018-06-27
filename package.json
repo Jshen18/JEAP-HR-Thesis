@@ -4,8 +4,9 @@
   "description": "AirBnB clone testing whether home bookings rate increase when users are shown AirBnB experiences along with homes",
   "main": ".eslintrc.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha — timeout 10000",
-    "start": "nodemon --exec babel-node -- server/index.js"
+    "test": "NODE_ENV=test mocha --reporter nyan --require babel-core/register --exit",
+    "start": "nodemon --exec babel-node -- server/index.js",
+    "artillery": "artillery run ./test/loadTesting.yml"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,9 @@
     "nodemon": "^1.12.5",
     "pg": "^7.4.0",
     "psql": "0.0.1",
-    "request": "^2.83.0"
+    "redis": "^2.8.0",
+    "request": "^2.83.0",
+    "sqs-consumer": "^3.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

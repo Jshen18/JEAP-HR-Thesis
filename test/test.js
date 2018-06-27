@@ -51,3 +51,33 @@ describe('Database', () => {
   });
 })
 
+//  tests for SQL database
+// describe('When running SQL server, experiencesInventory database', () => {
+//   it('db.connection.connect should ...', (done) => {
+//     db.connection.connect((err, result) => {
+//         if(err){
+//           throw err;
+
+//           done();
+//         }
+//         expect(result).to.equal('SQL CONNECT SUCCESSFUL.');
+//         done();
+//     });
+//   });
+// });
+// it('should have created a database, experiencesInventory', (done) => {
+//   db.connection.query('SHOW DATABASES LIKE experiencesInventory');
+// })
+// )};
+
+//   it('should be connected', (done) => {
+//    db.connection(err, result) => {
+
+//    })
+//   it('should exist', (done, err) => {
+//     db.connection.query('SHOW DATABASES LIKE experiencesInventory');
+//   });
+// });
+//   it('should have city, experiences, neighborhood, and reservations tables', (done, err) => {
+//     db.connection.query('SHOW TABLES');
+//   });

@@ -2,10 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import sqs from './awsFilesOnHold/sqsSetup';
 import db from '../database/index';
-
+import redisClient from './cache';
 
 require('dotenv').config();
 //  import seed data file to post and patch
+
 const app = express();
 const port = process.env.PORT || 3000; //  .env file
 
@@ -26,17 +27,29 @@ app.get('/experiences', (req, res) => {
   const { city } = req.query;
   const { neighborhood } = req.query;
   const neighborhoodQuery = db.queryAsync(`SELECT id FROM NEIGHBORHOOD WHERE Neighborhood='${neighborhood}' LIMIT 1`);
-  const cityQuery = db.queryAsync(`SELECT id FROM CITY WHERE City='${city}' LIMIT 1`);
+  const cityQuery = db.queryAsync(`SELECT id FROM CITY WHERE City='${city}'`);
+
+  // redisClient.getAsync(city)
+  //   .then((response) => {
+  //     if (response != null) {
+  //       sqs.sendClient(response);
+  //       res.status(200).end();
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     console.log('Redis Catch', err);
+  //   });
 
   Promise.all([cityQuery, neighborhoodQuery])
     .then((data) => {
       const [cityData, neighborhoodData] = JSON.parse(JSON.stringify(data)).map(data => data[0] || undefined);
-      const query = neighborhoodData == null ? `SELECT * FROM EXPERIENCES WHERE City_id=${cityData.id}` :
-        `SELECT * FROM EXPERIENCES WHERE City_id=${cityData.id} AND Neighborhood_id=${neighborhoodData.id}`;
+      const query = neighborhoodData == null ? `SELECT * FROM EXPERIENCES WHERE City_id=${cityData.id} LIMIT 1` :
+        `SELECT * FROM EXPERIENCES WHERE City_id=${cityData.id} AND Neighborhood_id=${neighborhoodData.id} LIMIT 1`;
       db.queryAsync(query)
         .then((data) => {
-          sqs.sendClient(data);
-          res.status(200).json(data);
+          // redisClient.set(city, JSON.stringify(data));
+          sqs.sendClient(JSON.stringify(data));
+          res.status(200).end();
         })
         .catch((error) => {
           res.sendStatus(400, error);
